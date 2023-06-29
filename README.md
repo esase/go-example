@@ -21,3 +21,9 @@ Hosts suppliers in a singular monolith.
 ### Generate docs
 
     swag init -d ./cmd,./
+
+## Tests
+
+### Integration tests
+
+    go test ./cmd

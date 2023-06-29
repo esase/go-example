@@ -9,6 +9,13 @@ import (
 	"github.com/joho/godotenv"
 )
 
+func setupRouter() *gin.Engine {
+	router := gin.Default()
+	routes.InstallRoutes(router)
+
+	return router
+}
+
 func main() {
 	_ = godotenv.Load("configs/.env")
 
@@ -16,8 +23,7 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	router := gin.Default()
-	routes.InstallRoutes(router)
+	router := setupRouter()
 
 	router.Run(fmt.Sprintf("localhost:%s", os.Getenv("PORT")))
 }
