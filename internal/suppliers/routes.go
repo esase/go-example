@@ -1,7 +1,7 @@
 package suppliers
 
 import (
-	"git.crg.one/scm/go/supplier-hub.git/src/suppliers/example"
+	"git.crg.one/scm/go/supplier-hub.git/internal/suppliers/example"
 	"github.com/gin-gonic/gin"
 )
 

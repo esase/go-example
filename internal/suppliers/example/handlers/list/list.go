@@ -3,7 +3,7 @@ package list
 import (
 	"net/http"
 
-	"git.crg.one/scm/go/supplier-hub.git/src/suppliers/example/models"
+	"git.crg.one/scm/go/supplier-hub.git/internal/suppliers/example/models"
 	"github.com/gin-gonic/gin"
 )
 

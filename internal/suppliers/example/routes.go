@@ -1,8 +1,8 @@
 package example
 
 import (
-	"git.crg.one/scm/go/supplier-hub.git/src/suppliers/example/handlers/create"
-	"git.crg.one/scm/go/supplier-hub.git/src/suppliers/example/handlers/list"
+	"git.crg.one/scm/go/supplier-hub.git/internal/suppliers/example/handlers/create"
+	"git.crg.one/scm/go/supplier-hub.git/internal/suppliers/example/handlers/list"
 	"github.com/gin-gonic/gin"
 )
 

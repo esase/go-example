@@ -3,8 +3,8 @@ package create
 import (
 	"net/http"
 
-	"git.crg.one/scm/go/supplier-hub.git/src/suppliers/example/models"
-	"git.crg.one/scm/go/supplier-hub.git/src/utils/errors"
+	"git.crg.one/scm/go/supplier-hub.git/internal/suppliers/example/models"
+	"git.crg.one/scm/go/supplier-hub.git/internal/utils/errors"
 	"github.com/gin-gonic/gin"
 )
 
