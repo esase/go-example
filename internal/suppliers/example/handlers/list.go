@@ -1,4 +1,4 @@
-package list
+package handlers
 
 import (
 	"net/http"
@@ -14,7 +14,7 @@ import (
 // @Produce                    json
 // @Success                    200  {array} models.Response
 // @Router                     /example/albums [get]
-func Handler(c *gin.Context) {
+func ListHandler(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, []models.Response{
 		{ID: "1", Title: "Blue Train", Artist: "John Coltrane", Price: 56.99},
 		{ID: "2", Title: "Jeru", Artist: "Gerry Mulligan", Price: 17.99},

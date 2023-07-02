@@ -1,4 +1,4 @@
-package create
+package handlers
 
 import (
 	"net/http"
@@ -17,7 +17,7 @@ import (
 // @Param                      album body     models.Request true "Album Data"
 // @Success                    200  {object} models.Response
 // @Router                     /example/albums [post]
-func Handler(c *gin.Context) {
+func CreateHandler(c *gin.Context) {
 	var request models.Request
 
 	if err := c.ShouldBindJSON(&request); err != nil {
