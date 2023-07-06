@@ -1,0 +1,454 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "supplier-hub",
+		"version": "1.0.0"
+	},
+	"paths": {
+		"/hertz/cancel": {
+			"post": {
+				"tags": [
+					"hertz"
+				],
+				"summary": "Cancel the booking",
+				"operationId": "cancelHertzBooking",
+				"description": "Cancel existing booking",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CancelRequestParams"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Succesful cancellation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CancelResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"CancelRequestParams":  {
+				"required": [
+					"pickUp",
+					"supplierBookingReference",
+					"reservNumber",
+					"brokerReference",
+					"contact",
+					"moduleId",
+					"configuration",
+					"timeouts"
+				],
+				"properties": {
+					"pickUp": {
+						"$ref": "#/components/schemas/RequestBranch"
+					},
+					"supplierBookingReference": {
+						"type": "string",
+						"description": "Supplier booking reference"
+					},
+					"brokerReference": {
+						"type": "string",
+						"description": "Car Rental Gateway booking/broker reference"
+					},
+					"reservNumber": {
+						"type": "string",
+						"description": "Car Rental Gateway booking reservation number"
+					},
+					"cancelReason": {
+						"type": "integer",
+						"description": "Cancel reason (value in range 2 to 15)"
+					},
+					"bookingDateTime": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"moduleId": {
+						"type": "integer",
+						"description": "Module ID"
+					},
+					"contact": {
+						"$ref": "#/components/schemas/Contact"
+					},
+					"configuration": {
+						"$ref": "#/components/schemas/HertzConfiguration"
+					},
+					"timeouts": {
+						"$ref": "#/components/schemas/Timeouts"
+					}
+				}
+			},
+			"CancelResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "string",
+						"enum": [
+							"OK",
+							"FAILED"
+						],
+						"description": "Was the cancellation successful."
+					},
+					"supplierRequests": {
+						"$ref": "#/components/schemas/SupplierRequests"
+					},
+					"errors": {
+						"$ref": "#/components/schemas/SupplierResponseErrors"
+					},
+					"warnings": {
+						"$ref": "#/components/schemas/SupplierResponseWarnings"
+					}
+				}
+			},
+			"RequestBranch": {
+				"type": "object",
+				"required": [
+					"code",
+					"country",
+					"dateTime"
+				],
+				"properties": {
+					"code": {
+						"type": "string",
+						"description": "Branch code"
+					},
+					"country": {
+						"description": "Country ISO code of branch",
+						"type": "string",
+						"pattern": "^[A-Z]{2}$",
+						"example": "GB"
+					},
+					"dateTime": {
+						"type": "string",
+						"format": "date-time"
+					}
+				}
+			},
+			"SupplierResponseWarnings": {
+				"type": "array",
+				"description": "List supplier warnings",
+				"items": {
+					"$ref": "#/components/schemas/SupplierResponseError"
+				}
+			},
+			"SupplierResponseErrors": {
+				"type": "array",
+				"description": "List supplier errors",
+				"items": {
+					"$ref": "#/components/schemas/SupplierResponseError"
+				}
+			},
+			"SupplierResponseError": {
+				"type": "object",
+				"required": [
+					"message"
+				],
+				"properties": {
+					"message": {
+						"type": "string",
+						"description": "Message"
+					},
+					"code": {
+						"type": "string",
+						"description": "Supplier code"
+					},
+					"details": {
+						"type": "string",
+						"description": "Details"
+					}
+				}
+			},
+			"SupplierRequests": {
+				"type": "array",
+				"description": "Requests made to and responses received from supplier system",
+				"items": {
+					"$ref": "#/components/schemas/SupplierRequest"
+				}
+			},
+			"SupplierRequest": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"description": "Request name (e.g. rates, location, booking, etc)",
+						"type": "string"
+					},
+					"requestContent": {
+						"$ref": "#/components/schemas/RequestContent"
+					},
+					"responseContent": {
+						"$ref": "#/components/schemas/ResponseContent"
+					},
+					"startDateTime": {
+						"description": "Datetime when the request was submitted",
+						"type": "string",
+						"format": "date-time"
+					},
+					"duration": {
+						"description": "Duration",
+						"type": "integer"
+					}
+				}
+			},
+			"RequestContent": {
+				"type": "object",
+				"properties": {
+					"url": {
+						"description": "Targeted url",
+						"type": "string"
+					},
+					"method": {
+						"description": "Request method",
+						"type": "string"
+					},
+					"body": {
+						"description": "Request body",
+						"type": "string"
+					},
+					"headers": {
+						"description": "Request headers",
+						"type": "object"
+					}
+				}
+			},
+			"ResponseContent": {
+				"type": "object",
+				"properties": {
+					"statusCode": {
+						"description": "Response status",
+						"type": "integer"
+					},
+					"headers": {
+						"description": "Response headers",
+						"type": "object"
+					},
+					"body": {
+						"description": "Response body",
+						"type": "string"
+					}
+				}
+			},
+			"Timeouts": {
+				"type": "object",
+				"required": [
+					"default"
+				],
+				"properties": {
+					"rates": {
+						"type": "integer",
+						"description": "Maximum time in milliseconds rates request is expected to return answer"
+					},
+					"default": {
+						"type": "integer",
+						"description": "Default value for maximum time in milliseconds when request is expected to return answer"
+					},
+					"booking": {
+						"type": "integer",
+						"description": "Maximum time in milliseconds booking request is expected to return answer"
+					},
+					"cancel": {
+						"type": "integer",
+						"description": "Maximum time in milliseconds cancel request is expected to return answer"
+					},
+					"extras": {
+						"type": "integer",
+						"description": "Maximum time in milliseconds extras request is expected to return answer"
+					},
+					"locations": {
+						"type": "integer",
+						"description": "Maximum time in milliseconds locations request is expected to return answer"
+					}
+				}
+			},
+			"HertzConfiguration": {
+				"type": "object",
+				"description": "Supplier specific parameters for all post-type requests except booking. Override in supplier module for all post-routes except booking",
+				"required": [
+					"supplierApiUrl",
+					"vendorCode"
+				],
+				"properties": {
+					"vendorCode": {
+						"type": "string",
+						"description": "Vendor code like ZE, FF, ZR or ZT"
+					},
+					"vendorCodeImport": {
+						"type": "string",
+						"description": "Mapping vendor code like ZE, FF, ZR or ZT"
+					},
+					"vehicleWhereAtMapping": {
+						"type": "object",
+						"description": "Vehicle where at mapping"
+					},
+					"residenceCountryMapping": {
+						"type": "object",
+						"description": "Residence country mapping. Residence of the customer in request in mapped to the country as in property value. Example: {\"AT\":\"DE\",\"IE\":\"BE\",\"SE\":\"DK\"}"
+					},
+					"maxResponses": {
+						"type": "string",
+						"description": "Max number of responses expected from Hertz. Default is 10"
+					},
+					"sendVoucher": {
+						"type": "boolean",
+						"description": "Send or not Voucher element"
+					},
+					"FrequentTravellerProgramId": {
+						"type": "string",
+						"description": "For FTN identifies the company associated with the FTN/MembershipId"
+					},
+					"FrequentTravellerTravelSector": {
+						"type": "string",
+						"description": "For FTN identifies FTN/MemmbershipID number. Allowed Values: 1 - FTN is Airline Frequent Flyer #, 2- #1 Club Number, 3 - Hotel Frequent Traveller #"
+					},
+					"proxyjsHops": {
+						"type": "string",
+						"description": "Intermediate ProxyJS servers"
+					},
+					"taxExclCoverageCountries": {
+						"type": "array",
+						"description": "Tax exclusive coverage countries. Example: [\"AA\", \"BB\"]",
+						"items": {
+							"type": "string"
+						}
+					},
+					"taxExclFees": {
+						"type": "string",
+						"description": "Fees that are tax exclusive in certain countries. Example: { \"AIRPORT CONCESSION RECOVERY\": [\"SE\", \"SA\"] }"
+					},
+					"feePayableLocally": {
+						"type": "object",
+						"description": "Fees that are considered allways payable locally in certain countries. Example: { \"AIRPORT CONCESSION RECOVERY\": [\"SE\", \"SA\"] }"
+					},
+					"cacheDebuglog": {
+						"type": "string",
+						"description": "Send detailed requests logging info for debugging"
+					},
+					"taco": {
+						"type": "string",
+						"description": "Travel Agency Commission Number"
+					},
+					"vc": {
+						"type": "string",
+						"description": "Validation Code assigned by Hertz"
+					},
+					"vn": {
+						"type": "string",
+						"description": "Vendor Number"
+					},
+					"cp": {
+						"type": "string",
+						"description": "Consumer Product Code"
+					},
+					"bookingAgent": {
+						"type": "string",
+						"description": "Booking agent"
+					},
+					"tour": {
+						"type": "string",
+						"description": "IT/Tour Number"
+					},
+					"rateQualifier": {
+						"type": "string",
+						"description": "Rate Qualifier"
+					},
+					"travelPurpose": {
+						"type": "string",
+						"description": "Travel Purpose"
+					},
+					"corpDiscountNmbr": {
+						"type": "string",
+						"description": "Corporate Discount Number"
+					},
+					"promotionCode": {
+						"type": "string",
+						"description": "Promotion Code"
+					},
+					"clubNumber": {
+						"type": "string",
+						"description": "Club Number"
+					},
+					"frequentTravellerNumber": {
+						"type": "string",
+						"description": "frequent traveller number"
+					},
+					"supplierPromotionalDiscount": {
+						"type": "object",
+						"description": "Supplier discount percentages for estimated car price without applied supplier discount. [corp_discount_nmbr]_[promotion_code]:discount percentage> - example:{\"154080_169680\":25}"
+					},
+					"fpPayFeesLocally": {
+						"type": "boolean",
+						"description": "It is used with full-prepay deals, to determine are the fees payable locally (true) or pay now (false). Default is false"
+					},
+					"useDirectSell": {
+						"type": "boolean",
+						"description": "If true, Direct Sell type booking and modify is used. If false or not present - Reference Sell is used"
+					},
+					"sendAgencyBillingNumberWithBooking": {
+						"type": "boolean",
+						"description": "If this value is set to true in contract, billing number is sent with booking request to supplier"
+					},
+					"voucherContractBillingType": {
+						"type": "string",
+						"description": "If value is Partial, EstimatedTotalAmount from rates request is added to the booking request."
+					},
+					"payNowCoverages": {
+						"type": "array",
+						"description": "Supplier code(s) of coverage(s) that are not included in rate and are have to be set pay now (made for ITSC). Example: [\"7\",\"48\"]",
+						"items": {
+							"type": "string"
+						}
+					},
+					"lastName": {
+						"type": "string",
+						"description": "Customer last name who is the owner of the booking"
+					},
+					"residenceCountry": {
+						"type": "string",
+						"description": "Customer country of residence"
+					},
+					"booking": {
+						"type": "object",
+						"required": [
+							"supplierBookingReference",
+							"bookingDateTime"
+						],
+						"properties": {
+							"supplierBookingReference": {
+								"type": "string",
+								"description": "Supplier booking reference"
+							},
+							"bookingDateTime": {
+								"type": "string",
+								"format": "date-time"
+							}
+						}
+					}
+				}
+			},
+			"Contact": {
+				"type": "object",
+				"description": "Contact info",
+				"required": [
+					"email"
+				],
+				"properties": {
+					"email": {
+						"type": "string",
+						"format": "email",
+						"description": "E-mail"
+					}
+				}
+			}
+		}
+	}
+}
