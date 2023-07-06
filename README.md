@@ -16,14 +16,6 @@ Hosts suppliers in a singular monolith.
 
     go run cmd/main.go
 
-## Docs
+### Generate resources
 
-### Generate docs
-
-    swag init -d ./cmd,./
-
-## Tests
-
-### Integration tests
-
-    go test ./cmd
+    ./bin/gen-resources.sh

@@ -5,16 +5,10 @@ import (
 	"os"
 
 	routes "git.crg.one/scm/go/supplier-hub.git/internal"
+	"git.crg.one/scm/go/supplier-hub.git/internal/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
-
-func setupRouter() *gin.Engine {
-	router := gin.Default()
-	routes.InstallRoutes(router)
-
-	return router
-}
 
 func main() {
 	_ = godotenv.Load("configs/.env")
@@ -26,4 +20,13 @@ func main() {
 	router := setupRouter()
 
 	router.Run(fmt.Sprintf("localhost:%s", os.Getenv("PORT")))
+}
+
+func setupRouter() *gin.Engine {
+	router := gin.Default()
+	router.Use(middleware.OpenapiValidator())
+
+	routes.InstallRoutes(router)
+
+	return router
 }
