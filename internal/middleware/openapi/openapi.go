@@ -1,4 +1,4 @@
-package middleware
+package openapi
 
 import (
 	"context"

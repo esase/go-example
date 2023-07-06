@@ -5,7 +5,7 @@ import (
 	"os"
 
 	routes "git.crg.one/scm/go/supplier-hub.git/internal"
-	"git.crg.one/scm/go/supplier-hub.git/internal/middleware"
+	"git.crg.one/scm/go/supplier-hub.git/internal/middleware/openapi"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -24,7 +24,7 @@ func main() {
 
 func setupRouter() *gin.Engine {
 	router := gin.Default()
-	router.Use(middleware.OpenapiValidator())
+	router.Use(openapi.OpenapiValidator())
 
 	routes.InstallRoutes(router)
 

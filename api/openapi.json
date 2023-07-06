@@ -5,14 +5,14 @@
 		"version": "1.0.0"
 	},
 	"paths": {
-		"/hertz/cancel": {
+		"/{platform}/cancel": {
 			"post": {
-				"tags": [
-					"hertz"
-				],
 				"summary": "Cancel the booking",
-				"operationId": "cancelHertzBooking",
+				"operationId": "cancelBooking",
 				"description": "Cancel existing booking",
+				"parameters": [{
+					"$ref": "#/components/parameters/requiredPlatformInPath"
+				}],
 				"requestBody": {
 					"content": {
 						"application/json": {
@@ -24,7 +24,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "Succesful cancellation",
+						"description": "Successful cancellation",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -82,7 +82,11 @@
 						"$ref": "#/components/schemas/Contact"
 					},
 					"configuration": {
-						"$ref": "#/components/schemas/HertzConfiguration"
+						"oneOf": [{
+							"$ref": "#/components/schemas/HertzConfiguration"
+						}, {
+							"$ref": "#/components/schemas/FocoConfiguration"
+						}]
 					},
 					"timeouts": {
 						"$ref": "#/components/schemas/Timeouts"
@@ -270,6 +274,20 @@
 					}
 				}
 			},
+			"Contact": {
+				"type": "object",
+				"description": "Contact info",
+				"required": [
+					"email"
+				],
+				"properties": {
+					"email": {
+						"type": "string",
+						"format": "email",
+						"description": "E-mail"
+					}
+				}
+			},
 			"HertzConfiguration": {
 				"type": "object",
 				"description": "Supplier specific parameters for all post-type requests except booking. Override in supplier module for all post-routes except booking",
@@ -278,6 +296,10 @@
 					"vendorCode"
 				],
 				"properties": {
+					"supplierApiUrl": {
+						"type": "string",
+						"description": "Supplier api url"
+					},
 					"vendorCode": {
 						"type": "string",
 						"description": "Vendor code like ZE, FF, ZR or ZT"
@@ -435,18 +457,38 @@
 					}
 				}
 			},
-			"Contact": {
+			"FocoConfiguration": {
 				"type": "object",
-				"description": "Contact info",
+				"description": "Supplier specific parameters for all post-type requests except booking. Override in supplier module for all post-routes except booking",
 				"required": [
-					"email"
+					"supplierApiUrl",
+					"usertToken"
 				],
 				"properties": {
-					"email": {
+					"supplierApiUrl": {
 						"type": "string",
-						"format": "email",
-						"description": "E-mail"
+						"description": "Supplier api url"
+					},
+					"usertToken": {
+						"type": "string",
+						"description": "User token"
 					}
+				}
+			}
+		},
+		"parameters": {
+			"requiredPlatformInPath": {
+				"name": "platform",
+				"in": "path",
+				"description": "Platform ID",
+				"required": true,
+				"schema": {
+					"type": "string",
+					"minLength": 1,
+					"enum": [
+						"foco",
+						"hertz"
+					]
 				}
 			}
 		}

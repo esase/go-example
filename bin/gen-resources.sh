@@ -1,13 +1,13 @@
 # Generate types
 oapi-codegen \
 	-generate "types" \
-	-o "internal/suppliers/base/models/models.go" \
-	-package "models" \
+	-o "internal/common/schema/schema.go" \
+	-package "schema" \
 	"api/openapi.json"
 
 # Generate spec
 oapi-codegen \
 	-generate "spec" \
-	-o "internal/middleware/oa_spec_gen.go" \
-	-package "middleware" \
+	-o "internal/middleware/openapi/oa_spec_gen.go" \
+	-package "openapi" \
 	"api/openapi.json"
